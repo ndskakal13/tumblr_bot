@@ -1,12 +1,17 @@
+import java.util.LinkedList;
 import java.util.List;
-import com.tumblr.jumblr;
+
+import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.AnswerPost;
+import com.tumblr.jumblr.types.Blog;
+import com.tumblr.jumblr.types.Post;
+import com.tumblr.jumblr.types.TextPost;
 
 public class jumblrClient {
 	
-	private List<String> TAGS = new List<>();
-	TAGS.add("bot");
+	LinkedList<String> TAGS;
 	
-	private final String CONSUMER_KEY, CONSUMER_SECRET, OAUTH_KEY, OAUTH_SECRET, USERNAME, TAGS;
+	private final String CONSUMER_KEY, CONSUMER_SECRET, OAUTH_KEY, OAUTH_SECRET, USERNAME;
 	private JumblrClient tumblr;
 	private Blog blog;
 	
@@ -14,6 +19,8 @@ public class jumblrClient {
 	{
 		// ensure this is changed to your blog name
 		USERNAME = blogName;
+		TAGS = new LinkedList<>();
+		TAGS.add("bot");
 		TAGS.add(blogName); // you can change this if you want
 		
 		// ensure these are set correctly with the given names
@@ -31,13 +38,29 @@ public class jumblrClient {
 	public void createPost(String post)
 	{
 		// untested as I haven't been able to connect my bot yet
-		TextPost t = tumblr.newPost(USERNAME, TextPost);
-		t.setBody(post);
-		t.setTags(TAGS);
-		t.save();
+		TextPost t = new TextPost();
+		try {
+			t = tumblr.newPost(USERNAME, t.getClass());
+		} catch (IllegalAccessException e) {
+			System.out.println("ERR: IllegalAccessException. Unable to create post.");
+			e.printStackTrace();
+			t = null;
+		} catch (InstantiationException e) {
+			System.out.println("ERR: InstantiationException. Unable to create post.");
+			e.printStackTrace();
+			t = null;
+		}
+		
+		if (t != null)
+		{
+			t.setBody(post);
+			t.setTags(TAGS);
+			t.save();
+		}
+		
 	}
 	
-	public void answerAsk(AnswerPost ask)
+	public void answerAsk(Post ask)
 	{
 		// untested as I haven't been able to connect my bot yet
 		// trying to find a way to set answer
@@ -47,7 +70,7 @@ public class jumblrClient {
 	{
 		List<Post> asks = blog.submissions();
 		
-		for (ask a : asks)
+		for (Post a : asks)
 		{
 			answerAsk(a);
 		}
