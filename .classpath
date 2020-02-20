@@ -12,5 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="jumblr-0.0.10-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Documents/coding/tumblr_bot/jumblr-0.0.10-jar-with-dependencies.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
