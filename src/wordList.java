@@ -1,10 +1,10 @@
 import java.util.Hashtable;
 
-public class wordList {
+public class WordList {
 	
 	private Hashtable<String, Word> words;
 	
-	public wordList()
+	public WordList()
 	{
 		words = new Hashtable<>();
 	}
