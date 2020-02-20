@@ -16,10 +16,18 @@ public class Word {
 		{
 			wordsBefore.put(before, 1);
 		}
+		else
+		{
+			wordsBefore.put("<start>", 1); // update count for starting a phrase
+		}
 		
 		if (after != null)
 		{
 			wordsAfter.put(after, 1);
+		}
+		else
+		{
+			wordsAfter.put("<finish>", 1); // update count for finishing a phrase
 		}
 	}
 	
@@ -37,11 +45,21 @@ public class Word {
 			Integer newVal = wordsBefore.get(before) + 1;
 			wordsBefore.replace(before, newVal);
 		}
+		else
+		{
+			Integer newVal = wordsBefore.get("<start>") + 1;
+			wordsBefore.replace("<start>", newVal);
+		}
 		
 		if (after != null)
 		{
 			Integer newVal = wordsAfter.get(after) + 1;
 			wordsAfter.replace(after, newVal);
+		}
+		else
+		{
+			Integer newVal = wordsAfter.get("<finish>") + 1;
+			wordsBefore.replace("<finish>", newVal);
 		}
 	}
 }
