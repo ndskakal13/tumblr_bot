@@ -38,13 +38,13 @@ public class WordList {
 			
 			if (i == 0)
 			{
-				before = null;
+				before = "<start>";
 				after = wordsToAdd[i + 1];
 			}
 			else if (i - 1 == wordsToAdd.length)
 			{
 				before = wordsToAdd[i - 1];
-				after = null;
+				after = "<finish>";
 			}
 			else
 			{
@@ -62,5 +62,16 @@ public class WordList {
 				addWord(word, before, after);
 			}
 		}
+	}
+	
+	/**
+	 *  Purpose: return list of words
+	 *  Input: none
+	 *  @return words: the list of words being maintained by this WordList
+	 *  Assumptions: none
+	 */
+	public Hashtable<String, Word> getWordList()
+	{
+		return words;
 	}
 }
