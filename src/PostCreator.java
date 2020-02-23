@@ -7,10 +7,10 @@ public class PostCreator {
 	private Hashtable<String, Word> words;
 	Random rand;
 	
-	public PostCreator()
+	public PostCreator(WordList WL)
 	{
-		wordlist = new WordList();
-		words = wordlist.getWordList();
+		wordlist = WL;
+		words = WL.getWordList();
 		rand = new Random();
 	}
 	

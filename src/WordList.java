@@ -3,10 +3,12 @@ import java.util.Hashtable;
 public class WordList {
 	
 	private Hashtable<String, Word> words;
+	private InputCleaner sanitizer;
 	
 	public WordList()
 	{
 		words = new Hashtable<>();
+		sanitizer = new InputCleaner();
 	}
 	
 	/**
@@ -27,9 +29,10 @@ public class WordList {
 	 *  Output: none
 	 *  Assumptions: none
 	 */
-	public void handleInput(String input)
+	public void readInput(String input)
 	{
 		String[] wordsToAdd = input.split(" ");
+		wordsToAdd = sanitize(wordsToAdd);
 		
 		for (int i = 0; i < wordsToAdd.length; i++)
 		{
@@ -62,6 +65,24 @@ public class WordList {
 				addWord(word, before, after);
 			}
 		}
+	}
+	
+	/**
+	 *  Purpose: sanitize the input from user (prevents special characters, capitalized versions of duplicate words
+	 *  @param input: the array of Strings to be sanitized
+	 *  @return cleanInput: the sanitized input
+	 *  Assumptions: none
+	 */
+	private String[] sanitize(String[] input)
+	{
+		String[] cleanInput = input;
+		
+		for (String s : cleanInput)
+		{
+			sanitizer.cleanWord(s);
+		}
+		
+		return cleanInput;
 	}
 	
 	/**
