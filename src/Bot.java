@@ -1,14 +1,22 @@
+// all uses of the TumblrClient class are currently commented out as the class is untested
+
 import java.util.Scanner;
 
 public class Bot {
 	
-	private TumblrClient client;
+	// private TumblrClient client;
+	private PostCreator postMaker;
+	private WordList wordlist;
 	private Scanner scan;
+	private BOT_STATE state;
 	
 	public Bot()
 	{
-		client = new TumblrClient("progbot");
+		// client = new TumblrClient("progbot");
 		scan = new Scanner(System.in);
+		wordlist = new WordList();
+		postMaker = new PostCreator(wordlist);
+		state = BOT_STATE.MENU;
 	}
 	
 	/***
@@ -17,34 +25,59 @@ public class Bot {
 	 *  Output: none
 	 *  Assumptions: bot has been set up
 	 */
-	public void openMenu()
+	public void go()
 	{
-		String input = ""; // default value to ensure loop runs
-		System.out.println("What would you like to do?");
-		System.out.println("[T]rain, [P]ost, [Q]uit");
-		while (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+		while (state != BOT_STATE.QUIT)
 		{
-			input = scan.next();
-			
-			if (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+			switch (state)
 			{
-				System.out.println("Please enter a valid input.");
-				System.out.println("Would you like to [t]rain, [p]ost, or [q]uit?");
+				case MENU:
+					String input = ""; // default value to ensure loop runs
+					System.out.println("What would you like to do?");
+					System.out.println("[T]rain, [P]ost, [Q]uit");
+					while (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+					{
+						input = scan.next();
+						
+						if (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+						{
+							System.out.println("Please enter a valid input.");
+							System.out.println("Would you like to [t]rain, [p]ost, or [q]uit?");
+						}
+					}
+					
+					if (input == "t")
+					{
+						state = BOT_STATE.TRAIN;
+					}
+					else if (input == "p")
+					{
+						state = BOT_STATE.CREATE_POST;
+					}
+					else if (input == "q")
+					{
+						System.out.println("Quitting now.");
+						state = BOT_STATE.QUIT;
+					}
+				
+				case TRAIN:
+					train();
+					break;
+					
+				case CREATE_POST:
+					makePost();
+					break;
+					
+				case RUN_BOT:
+					runBot();
+					break;
+					
+				case QUIT:
+					break; // case shouldn't happen but this will just end the program if it does
 			}
 		}
 		
-		if (input == "t")
-		{
-			train();
-		}
-		else if (input == "p")
-		{
-			makePost();
-		}
-		else if (input == "q")
-		{
-			System.out.println("Quitting now.");
-		}
+		
 	}
 	
 	/***
@@ -55,10 +88,11 @@ public class Bot {
 	 */
 	public void runBot()
 	{
-		client.checkForAsks();
+		// TODO: implement TumblrClient once tested
+		// client.checkForAsks();
+		// makePost();
 		
-		String post = makePost();
-		client.createPost(post);
+		state = BOT_STATE.MENU;
 	}
 	
 	/***
@@ -67,24 +101,36 @@ public class Bot {
 	 *  @return post: post to be made
 	 *  Assumptions: client has been set up
 	 */
-	public String makePost()
+	public void makePost()
 	{
-		String post = "";
+		String post = postMaker.makePost();
 		
-		// TODO: add post-making algorithm
-		
-		return post;
+		// TODO: implement TumblrClient once tested
+		// client.createPost(post);
+		System.out.println(post);
 	}
 	
 	/***
 	 *  Purpose: train the bot with text data
 	 *  Input: none
 	 *  Output: none
-	 *  Assumptions:
+	 *  Assumptions: none
 	 */
 	public void train()
 	{
-		// TODO: add training algorithm
+		String keepGoing = "Y";
+		while (!keepGoing.equalsIgnoreCase("N"))
+		{
+			System.out.println("Enter the text to train the bot with"
+					+ "(one line at a time, please).");
+			String input = scan.next();
+			wordlist.readInput(input);
+			
+			System.out.println("Would you like to keep training the bot?"
+					+ "([N] to stop, all other inputs to keep going.)");
+			keepGoing = scan.next();
+		}
+		
+		state = BOT_STATE.MENU;
 	}
-
 }
