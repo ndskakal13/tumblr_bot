@@ -37,7 +37,7 @@ public class Bot {
 					System.out.println("[T]rain, [P]ost, [Q]uit");
 					while (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
 					{
-						input = scan.next();
+						input = scan.nextLine();
 						
 						if (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
 						{
@@ -46,18 +46,21 @@ public class Bot {
 						}
 					}
 					
-					if (input == "t")
+					if (input.equalsIgnoreCase("t"))
 					{
 						state = BOT_STATE.TRAIN;
+						break;
 					}
-					else if (input == "p")
+					else if (input.equalsIgnoreCase("p"))
 					{
 						state = BOT_STATE.CREATE_POST;
+						break;
 					}
-					else if (input == "q")
+					else if (input.equalsIgnoreCase("q"))
 					{
 						System.out.println("Quitting now.");
 						state = BOT_STATE.QUIT;
+						break;
 					}
 				
 				case TRAIN:
@@ -122,13 +125,13 @@ public class Bot {
 		while (!keepGoing.equalsIgnoreCase("N"))
 		{
 			System.out.println("Enter the text to train the bot with"
-					+ "(one line at a time, please).");
-			String input = scan.next();
+					+ " (one line at a time, please).");
+			String input = scan.nextLine();
 			wordlist.readInput(input);
 			
 			System.out.println("Would you like to keep training the bot?"
-					+ "([N] to stop, all other inputs to keep going.)");
-			keepGoing = scan.next();
+					+ " ([N] to stop, all other inputs to keep going.)");
+			keepGoing = scan.nextLine();
 		}
 		
 		state = BOT_STATE.MENU;

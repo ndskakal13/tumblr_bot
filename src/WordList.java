@@ -27,43 +27,53 @@ public class WordList {
 	 *  Purpose: handle a String of input
 	 *  @param input: input from user
 	 *  Output: none
-	 *  Assumptions: none
+	 *  Assumptions: input is not 1 token long
+	 *  TODO: allow to handle 1 token long Strings
 	 */
 	public void readInput(String input)
 	{
 		String[] wordsToAdd = input.split(" ");
 		wordsToAdd = sanitize(wordsToAdd);
+		String word = "", before = "", after = "";
 		
-		for (int i = 0; i < wordsToAdd.length; i++)
+		if (wordsToAdd.length == 1)
 		{
-			String word, before, after;
-			word = wordsToAdd[i];
-			
-			if (i == 0)
+			word = wordsToAdd[0];
+			before = "<start>";
+			after = "<finish>";
+		}
+		else
+		{
+			for (int i = 0; i < wordsToAdd.length; i++)
 			{
-				before = "<start>";
-				after = wordsToAdd[i + 1];
+				
+				word = wordsToAdd[i];
+				
+				if (i == 0)
+				{
+					before = "<start>";
+					after = wordsToAdd[i + 1];
+				}
+				else if (i + 1 == wordsToAdd.length)
+				{
+					before = wordsToAdd[i - 1];
+					after = "<finish>";
+				}
+				else
+				{
+					before = wordsToAdd[i - 1];
+					after = wordsToAdd[i + 1];
+				}
 			}
-			else if (i - 1 == wordsToAdd.length)
-			{
-				before = wordsToAdd[i - 1];
-				after = "<finish>";
-			}
-			else
-			{
-				before = wordsToAdd[i - 1];
-				after = wordsToAdd[i + 1];
-			}
-			
-			if (words.containsKey(word))
-			{
-				Word w = words.get(word);
-				w.updateWord(before, after);
-			}
-			else
-			{
-				addWord(word, before, after);
-			}
+		}
+		if (words.containsKey(word))
+		{
+			Word w = words.get(word);
+			w.updateWord(before, after);
+		}
+		else
+		{
+			addWord(word, before, after);
 		}
 	}
 	

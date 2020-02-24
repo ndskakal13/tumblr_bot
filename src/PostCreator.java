@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class PostCreator {
@@ -22,6 +24,8 @@ public class PostCreator {
 	 */
 	public String makePost()
 	{
+		// this gets stuck in a loop somewhere
+		
 		Word first = chooseFirstWord();
 		Word curWord = first;
 		String curWordStr = curWord.getWord();
@@ -44,6 +48,39 @@ public class PostCreator {
 	}
 	
 	/**
+	 *  Purpose: choose the first word of a post
+	 *  Input: none
+	 *  @return first: the first word of the post
+	 *  Assumptions: none
+	 */
+	private Word chooseFirstWord()
+	{
+		int chooseFirst = getRandNo(0);
+		Word first = new Word("", "", ""); // I have to initialize this to something
+		
+		while (chooseFirst >= 0)
+		{
+			Enumeration<Word> firstWords = words.elements();
+			while (firstWords.hasMoreElements())
+			{
+				Word cur = firstWords.nextElement();
+				
+				if (cur.wordsBefore.get("<start>") != null)
+				{
+					chooseFirst = chooseFirst - cur.wordsBefore.get("<start>");	
+				}
+				
+				if (chooseFirst <= 0)
+				{
+					first = cur;
+				}
+			}
+		}
+		
+		return first;
+	}
+
+	/**
 	 *  Purpose: choose the next word of a post
 	 *  Input: none
 	 *  @return word: next word to be put in post
@@ -53,50 +90,31 @@ public class PostCreator {
 	{
 		int chooseNext = getRandNo(0);
 		String nextWord = ""; // default value
-		String[] nextWords = (String[]) lastWord.wordsAfter.values().toArray();
 		
 		while (chooseNext >= 0)
 		{
-			for (String w : nextWords)
+			try
 			{
-				chooseNext = chooseNext - lastWord.wordsAfter.get(w);
-				
-				if (chooseNext <= 0)
+				Enumeration<String> nextWords = lastWord.wordsAfter.keys();
+				while (nextWords.hasMoreElements())
 				{
-					nextWord = w;
+					String cur = nextWords.nextElement();
+					chooseNext = chooseNext - lastWord.wordsAfter.get(cur);
+					
+					if (chooseNext <= 0)
+					{
+						nextWord = cur;
+					}
 				}
 			}
+			catch (NullPointerException ex) // if current word has no words in afterWords
+			{
+				nextWord = "<finish>";
+			}
+			
 		}
 		
 		return nextWord;
-	}
-	
-	/**
-	 *  Purpose: choose the first word of a post
-	 *  Input: none
-	 *  @return first: the first word of the post
-	 *  Assumptions: none
-	 */
-	private Word chooseFirstWord()
-	{
-		int chooseFirst = getRandNo(0);
-		Word[] firstWords = (Word[]) words.values().toArray();
-		Word first = firstWords[chooseFirst]; // I have to initialize this to something
-		
-		while (chooseFirst >= 0)
-		{
-			for (Word w : firstWords)
-			{
-				chooseFirst = chooseFirst - w.wordsBefore.get("<start>");
-				
-				if (chooseFirst <= 0)
-				{
-					first = w;
-				}
-			}
-		}
-		
-		return first;
 	}
 	
 	/**

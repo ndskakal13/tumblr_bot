@@ -25,11 +25,28 @@ public class Word {
 	 */
 	public void updateWord(String before, String after)
 	{
-		Integer newVal = wordsBefore.get(before) + 1;
-		wordsBefore.replace(before, newVal);
+		try
+		{
+			Integer befVal = wordsBefore.get(before) + 1;
+			wordsBefore.replace(before, befVal);
+		}
+		catch (NullPointerException ex)
+		{
+			Integer befVal = 1;
+			wordsBefore.put(before, befVal);
+		}
 		
-		newVal = wordsAfter.get(after) + 1;
-		wordsAfter.replace(after, newVal);
+		try
+		{
+			Integer aftVal = wordsAfter.get(after) + 1;
+			wordsAfter.replace(after, aftVal);
+		}
+		catch (NullPointerException ex)
+		{
+			Integer aftVal = 1;
+			wordsBefore.put(after, aftVal);
+		}
+		
 	}
 	
 	/**
