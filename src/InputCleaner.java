@@ -36,6 +36,6 @@ public class InputCleaner {
 			cleanWord = cleanWord.replaceAll("\\" + s, "");
 		}
 		
-		return input;
+		return cleanWord;
 	}	
 }
