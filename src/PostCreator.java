@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class PostCreator {
 	
@@ -55,17 +56,18 @@ public class PostCreator {
 	 */
 	private Word chooseFirstWord()
 	{
-		int chooseFirst = getRandNo(0);
+		int chooseFirst = getRandNo(5);
 		Word first = new Word("", "", ""); // I have to initialize this to something
 		
 		while (chooseFirst >= 0)
 		{
-			Enumeration<Word> firstWords = words.elements();
-			while (firstWords.hasMoreElements())
+			Iterator<Word> firstWords = words.values().iterator();
+			Word cur = null;
+			while (firstWords.hasNext())
 			{
-				Word cur = firstWords.nextElement();
-				
-				if (cur.wordsBefore.get("<start>") != null)
+				cur = firstWords.next();
+			
+				if (cur.wordsBefore.containsKey("<start>"))
 				{
 					chooseFirst = chooseFirst - cur.wordsBefore.get("<start>");	
 				}
@@ -73,8 +75,9 @@ public class PostCreator {
 				if (chooseFirst <= 0)
 				{
 					first = cur;
+					break;
 				}
-			}
+			}	
 		}
 		
 		return first;
@@ -88,22 +91,26 @@ public class PostCreator {
 	 */
 	private String chooseWord(Word lastWord)
 	{
-		int chooseNext = getRandNo(0);
+		int chooseNext = getRandNo(20);
 		String nextWord = ""; // default value
+		
 		
 		while (chooseNext >= 0)
 		{
 			try
 			{
-				Enumeration<String> nextWords = lastWord.wordsAfter.keys();
-				while (nextWords.hasMoreElements())
+				Iterator<String> nextWords = lastWord.wordsAfter.keySet().iterator();
+				String cur = null;
+				
+				while (nextWords.hasNext())
 				{
-					String cur = nextWords.nextElement();
+					cur = nextWords.next();
 					chooseNext = chooseNext - lastWord.wordsAfter.get(cur);
-					
+				
 					if (chooseNext <= 0)
 					{
 						nextWord = cur;
+						break;
 					}
 				}
 			}
@@ -111,9 +118,7 @@ public class PostCreator {
 			{
 				nextWord = "<finish>";
 			}
-			
 		}
-		
 		return nextWord;
 	}
 	
@@ -127,11 +132,13 @@ public class PostCreator {
 	{
 		if (max > 0)
 		{
-			return rand.nextInt(max);
+			return rand.nextInt(max + 1) + 1;
 		}
 		else
 		{
-			return rand.nextInt();
+			System.out.println("ERR: Received invalid bound for getRandNo."
+					+ " Returning 0.");
+			return 0;
 		}
 	}
 }

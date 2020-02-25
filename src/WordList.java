@@ -64,16 +64,17 @@ public class WordList {
 					before = wordsToAdd[i - 1];
 					after = wordsToAdd[i + 1];
 				}
+				
+				if (words.containsKey(word))
+				{
+					Word w = words.get(word);
+					w.updateWord(before, after);
+				}
+				else
+				{
+					addWord(word, before, after);
+				}
 			}
-		}
-		if (words.containsKey(word))
-		{
-			Word w = words.get(word);
-			w.updateWord(before, after);
-		}
-		else
-		{
-			addWord(word, before, after);
 		}
 	}
 	
@@ -87,9 +88,9 @@ public class WordList {
 	{
 		String[] cleanInput = input;
 		
-		for (String s : cleanInput)
+		for (int i = 0; i < cleanInput.length; i++)
 		{
-			sanitizer.cleanWord(s);
+			cleanInput[i] = sanitizer.cleanWord(cleanInput[i]);
 		}
 		
 		return cleanInput;
