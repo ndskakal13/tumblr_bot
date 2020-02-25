@@ -44,7 +44,7 @@ public class Word {
 		catch (NullPointerException ex)
 		{
 			Integer aftVal = 1;
-			wordsBefore.put(after, aftVal);
+			wordsAfter.put(after, aftVal);
 		}
 		
 	}
