@@ -111,6 +111,8 @@ public class Bot {
 		// TODO: implement TumblrClient once tested
 		// client.createPost(post);
 		System.out.println(post);
+		
+		state = BOT_STATE.MENU;
 	}
 	
 	/***
