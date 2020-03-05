@@ -3,5 +3,6 @@ public enum BOT_STATE {
 	RUN_BOT, // for a typical run of the bot's operations
 	CREATE_POST, // prepare to create a post
 	TRAIN, // train the bot
+	CHAT, // chat with the bot
 	QUIT // done with bot operations
 }

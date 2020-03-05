@@ -34,15 +34,18 @@ public class Bot {
 				case MENU:
 					String input = ""; // default value to ensure loop runs
 					System.out.println("What would you like to do?");
-					System.out.println("[T]rain, [P]ost, [Q]uit");
-					while (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+					System.out.println("[T]rain, [P]ost, [C]hat, [Q]uit");
+					while (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p")
+							&& !input.equalsIgnoreCase("c") && !input.equalsIgnoreCase("q"))
 					{
 						input = scan.nextLine();
 						
-						if (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p") && !input.equalsIgnoreCase("q"))
+						if (!input.equalsIgnoreCase("t") && !input.equalsIgnoreCase("p")
+								&& !input.equalsIgnoreCase("c") && !input.equalsIgnoreCase("q"))
 						{
 							System.out.println("Please enter a valid input.");
-							System.out.println("Would you like to [t]rain, [p]ost, or [q]uit?");
+							System.out.println("Would you like to [t]rain, [p]ost, [c]hat,"
+									+ " or [q]uit?");
 						}
 					}
 					
@@ -56,6 +59,11 @@ public class Bot {
 						state = BOT_STATE.CREATE_POST;
 						break;
 					}
+					else if (input.equalsIgnoreCase("c"))
+					{
+						state = BOT_STATE.CHAT;
+						break;
+					}
 					else if (input.equalsIgnoreCase("q"))
 					{
 						System.out.println("Quitting now.");
@@ -65,14 +73,22 @@ public class Bot {
 				
 				case TRAIN:
 					train();
+					state = BOT_STATE.MENU;
 					break;
 					
 				case CREATE_POST:
 					makePost();
+					state = BOT_STATE.MENU;
 					break;
 					
 				case RUN_BOT:
 					runBot();
+					state = BOT_STATE.MENU;
+					break;
+					
+				case CHAT:
+					chat();
+					state = BOT_STATE.MENU;
 					break;
 					
 				case QUIT:
@@ -111,8 +127,6 @@ public class Bot {
 		// TODO: implement TumblrClient once tested
 		// client.createPost(post);
 		System.out.println(post);
-		
-		state = BOT_STATE.MENU;
 	}
 	
 	/***
@@ -123,19 +137,36 @@ public class Bot {
 	 */
 	public void train()
 	{
-		String keepGoing = "Y";
-		while (!keepGoing.equalsIgnoreCase("N"))
-		{
-			System.out.println("Enter the text to train the bot with"
-					+ " (one line at a time, please).");
-			String input = scan.nextLine();
-			wordlist.readInput(input);
-			
-			System.out.println("Would you like to keep training the bot?"
-					+ " ([N] to stop, all other inputs to keep going.)");
-			keepGoing = scan.nextLine();
-		}
+		String input = "";
 		
-		state = BOT_STATE.MENU;
+		System.out.println("Enter the text to train the bot with"
+				+ " (one line at a time, please).");
+		System.out.println("When done, just enter 'n'.");
+		
+		while (!input.equalsIgnoreCase("N"))
+		{
+			input = scan.nextLine();
+			if (!input.equalsIgnoreCase("N")) // prevent from adding "n"
+			{
+				wordlist.readInput(input, 10);
+			}
+		}
+	}
+	
+	public void chat()
+	{
+		System.out.println("Enter text and hit enter and the bot will respond.");
+		System.out.println("Enter 'n' to quit.");
+		
+		String input = "";
+		while (!input.equalsIgnoreCase("N"))
+		{
+			input = scan.nextLine();
+			if (!input.equalsIgnoreCase("N")) // prevent from adding "n"
+			{
+				wordlist.readInput(input, 1);
+				makePost();
+			}		
+		}
 	}
 }
