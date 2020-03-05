@@ -1,14 +1,17 @@
 import java.util.Hashtable;
+import java.util.ArrayList;
 
 public class WordList {
 	
 	private Hashtable<String, Word> words;
+	private ArrayList<Word> firstWords;
 	private InputCleaner sanitizer;
 	
 	public WordList()
 	{
 		words = new Hashtable<>();
 		sanitizer = new InputCleaner();
+		firstWords = new ArrayList<Word>();
 	}
 	
 	/**
@@ -17,36 +20,41 @@ public class WordList {
 	 *  Output: none
 	 *  Assumptions: word is not currently in words
 	 */
-	public void addWord(String word, String before, String after)
+	public void addWord(String word, String before, String after, int weight)
 	{
-		Word w = new Word(word, before, after);
+		Word w = new Word(word, before, after, weight);
 		words.put(word, w);
+		
+		if (before.equalsIgnoreCase("<start>"))
+		{
+			firstWords.add(w);
+		}
 	}
 	
 	/**
 	 *  Purpose: handle a String of input
 	 *  @param input: input from user
+	 *  @param weight: how much should be added to the count for that word
 	 *  Output: none
 	 *  Assumptions: input is not 1 token long
 	 *  TODO: allow to handle 1 token long Strings
 	 */
-	public void readInput(String input)
+	public void readInput(String input, int weight)
 	{
 		String[] wordsToAdd = input.split(" ");
 		wordsToAdd = sanitize(wordsToAdd);
 		String word = "", before = "", after = "";
 		
-		if (wordsToAdd.length == 1)
+		for (int i = 0; i < wordsToAdd.length; i++)
 		{
-			word = wordsToAdd[0];
-			before = "<start>";
-			after = "<finish>";
-		}
-		else
-		{
-			for (int i = 0; i < wordsToAdd.length; i++)
+			if (wordsToAdd.length == 1)
 			{
-				
+				word = wordsToAdd[0];
+				before = "<start>";
+				after = "<finish>";
+			}
+			else
+			{
 				word = wordsToAdd[i];
 				
 				if (i == 0)
@@ -64,18 +72,18 @@ public class WordList {
 					before = wordsToAdd[i - 1];
 					after = wordsToAdd[i + 1];
 				}
-				
-				if (words.containsKey(word))
-				{
-					Word w = words.get(word);
-					w.updateWord(before, after);
-				}
-				else
-				{
-					addWord(word, before, after);
-				}
 			}
-		}
+			
+			if (words.containsKey(word))
+			{
+				Word w = words.get(word);
+				w.updateWord(before, after, weight);
+			}
+			else
+			{
+				addWord(word, before, after, weight);
+			}
+		}	
 	}
 	
 	/**
@@ -105,5 +113,16 @@ public class WordList {
 	public Hashtable<String, Word> getWordList()
 	{
 		return words;
+	}
+	
+	/**
+	 *  Purpose: return list of words that have appeared first
+	 *  Input: none
+	 *  @return words: the list of first words being maintained by this WordList
+	 *  Assumptions: none
+	 */
+	public ArrayList<Word> getFirstWords()
+	{
+		return firstWords;
 	}
 }

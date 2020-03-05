@@ -6,14 +6,14 @@ public class Word {
 	private final String word;
 	
 	// constructor for a new Word
-	public Word(String w, String before, String after)
+	public Word(String w, String before, String after, int weight)
 	{
 		this.word = w;
 		wordsBefore = new Hashtable<>();
 		wordsAfter = new Hashtable<>();
 		
-		wordsBefore.put(before, 1);
-		wordsAfter.put(after, 1);
+		wordsBefore.put(before, weight);
+		wordsAfter.put(after, weight);
 	}
 	
 	/***
@@ -23,11 +23,11 @@ public class Word {
 	 *  Output: none
 	 *  Assumptions: Word object already exists
 	 */
-	public void updateWord(String before, String after)
+	public void updateWord(String before, String after, int weight)
 	{
 		try
 		{
-			Integer befVal = wordsBefore.get(before) + 1;
+			Integer befVal = wordsBefore.get(before) + weight;
 			wordsBefore.replace(before, befVal);
 		}
 		catch (NullPointerException ex)
@@ -38,7 +38,7 @@ public class Word {
 		
 		try
 		{
-			Integer aftVal = wordsAfter.get(after) + 1;
+			Integer aftVal = wordsAfter.get(after) + weight;
 			wordsAfter.replace(after, aftVal);
 		}
 		catch (NullPointerException ex)

@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -6,12 +7,14 @@ public class PostCreator {
 	
 	private WordList wordlist;
 	private Hashtable<String, Word> words;
+	private ArrayList<Word> startWords;
 	Random rand;
 	
 	public PostCreator(WordList WL)
 	{
 		wordlist = WL;
 		words = WL.getWordList();
+		startWords = WL.getFirstWords();
 		rand = new Random();
 	}
 	
@@ -54,31 +57,9 @@ public class PostCreator {
 	 */
 	private Word chooseFirstWord()
 	{
-		int chooseFirst = getRandNo(5);
-		Word first = new Word("", "", ""); // I have to initialize this to something
+		int chooseFirst = getRandNo(startWords.size()) - 1; // prevent OutOfBoundsException
 		
-		while (chooseFirst >= 0)
-		{
-			Iterator<Word> firstWords = words.values().iterator();
-			Word cur = null;
-			while (firstWords.hasNext())
-			{
-				cur = firstWords.next();
-			
-				if (cur.wordsBefore.containsKey("<start>"))
-				{
-					chooseFirst = chooseFirst - cur.wordsBefore.get("<start>");	
-				}
-				
-				if (chooseFirst <= 0)
-				{
-					first = cur;
-					break;
-				}
-			}	
-		}
-		
-		return first;
+		return startWords.get(chooseFirst);
 	}
 
 	/**
@@ -130,7 +111,7 @@ public class PostCreator {
 	{
 		if (max > 0)
 		{
-			return rand.nextInt(max + 1) + 1;
+			return rand.nextInt(max) + 1;
 		}
 		else
 		{
