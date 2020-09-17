@@ -4,6 +4,7 @@ public class Word {
 	
 	public Hashtable<String, Integer> wordsBefore, wordsAfter;
 	private final String word;
+	private Punctuation punct;
 	
 	// constructor for a new Word
 	public Word(String w, String before, String after, int weight)
@@ -14,6 +15,8 @@ public class Word {
 		
 		wordsBefore.put(before, weight);
 		wordsAfter.put(after, weight);
+		
+		
 	}
 	
 	/***
@@ -56,5 +59,10 @@ public class Word {
 	public String getWord()
 	{
 		return word;
+	}
+	
+	public String addPunctuation()
+	{
+		return punct.appendPunct(word);
 	}
 }
